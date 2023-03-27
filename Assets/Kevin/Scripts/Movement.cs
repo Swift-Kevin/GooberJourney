@@ -24,6 +24,8 @@ public class Movement : MonoBehaviour
     float probeDistance = 1f;
     [SerializeField]
     LayerMask probeMask = -1, stairsMask = -1;
+    [SerializeField]
+    Transform playerInputSpace = default;
 
     bool desiredJump;
     int jumpPhase, groundContactCount, stepsSinceLastGrounded, stepsSinceLastJump, steepContactCount;
@@ -46,7 +48,8 @@ public class Movement : MonoBehaviour
     void Start()
     {
         playerMovement = new PlayerMovement();
-        playerMovement.Player.Enable();
+        playerMovement.Player.Move.Enable();
+        playerMovement.Player.Jump.Enable();
     }
 
     // Update is called once per frame
@@ -55,8 +58,20 @@ public class Movement : MonoBehaviour
         Vector2 playerInput;
         playerInput = playerMovement.Player.Move.ReadValue<Vector2>();
         playerInput = Vector2.ClampMagnitude(playerInput, 1f);
-        desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
-
+        if (playerInputSpace)
+        {
+            Vector3 forward = playerInputSpace.forward;
+            forward.y = 0f;
+            forward.Normalize();
+            Vector3 right = playerInputSpace.right;
+            right.y = 0f;
+            right.Normalize();
+            desiredVelocity = (forward * playerInput.y + right * playerInput.x) * maxSpeed;
+        }
+        else
+        {
+            desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
+        }
         desiredJump |= playerMovement.Player.Jump.WasPressedThisFrame();
 
     }
