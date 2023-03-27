@@ -11,11 +11,11 @@ public class GunData1 : ScriptableObject
     [Header("Gun Data")]
     [SerializeField] public float damage;
     [SerializeField] public float maxDistance;
+    [SerializeField] public float fireRate;
 
-    [Header("Mag Data")]
+    [Header("Mag")]
     [SerializeField] private int maxAmmo;
     [SerializeField] public int currentAmmo;
-    [SerializeField] public float fireRate;
     [SerializeField] public float reloadSpeed;
     [HideInInspector]
     public bool reload;

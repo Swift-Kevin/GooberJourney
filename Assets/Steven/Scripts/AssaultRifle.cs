@@ -7,11 +7,7 @@ public class AssaultRifle : MonoBehaviour
     [Header("Weapon Stat References")]
     [SerializeField] GunData1 gunData;
 
-    private void Start()
-    {
-        PlayerShoot.shootInput += Shoot;
-    }
-
+    
     public void Shoot()
     {
         Debug.Log("Shot Gun!");
