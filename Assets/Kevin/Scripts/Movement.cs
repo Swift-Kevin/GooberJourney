@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
@@ -7,6 +8,8 @@ public class Movement : MonoBehaviour
     PlayerMovement playerMovement;
     Vector3 velocity, desiredVelocity, contactNormal, steepNormal;
     Rigidbody body;
+    Vector2 playerInput, _look;
+    private float _rotationVelocity;
 
     [SerializeField, Range(0f, 100f)]
     float maxSpeed = 10f;
@@ -26,6 +29,12 @@ public class Movement : MonoBehaviour
     LayerMask probeMask = -1, stairsMask = -1;
     [SerializeField]
     Transform playerCam;
+    [SerializeField]
+    Transform robotBody;
+    [SerializeField]
+    private GameObject _mainCamera;
+    [SerializeField]
+    float rotationPower;
 
     bool desiredJump;
     int jumpPhase, groundContactCount, stepsSinceLastGrounded, stepsSinceLastJump, steepContactCount;
@@ -55,7 +64,6 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 playerInput;
         playerInput = playerMovement.Player.Move.ReadValue<Vector2>();
         playerInput = Vector2.ClampMagnitude(playerInput, 1f);
         desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
@@ -67,7 +75,7 @@ public class Movement : MonoBehaviour
     {
         UpdateState();
         AdjustVelocity();
-        CameraUpdate();
+        RotateCharacter();
         if (desiredJump)
         {
             desiredJump = false;
@@ -82,10 +90,34 @@ public class Movement : MonoBehaviour
         contactNormal = steepNormal = Vector3.zero;
     }
 
-    void CameraUpdate()
+    void RotateCharacter()
     {
-        Vector2 camMove = playerMovement.Player.Cam.ReadValue<Vector2>();
-        playerCam.transform.localPosition = camMove;
+        _look = playerMovement.Player.Cam.ReadValue<Vector2>();
+        //if (playerInput != Vector2.zero)
+        //{
+        //    float _targetRotation = Mathf.Atan2(playerInput.x, playerInput.y) * Mathf.Rad2Deg + _mainCamera.transform.eulerAngles.y;
+
+        //    float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, 0.08f);
+
+        //    robotBody.transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+        //}
+        robotBody.transform.rotation *= Quaternion.AngleAxis(_look.x * rotationPower, Vector3.up);
+        robotBody.transform.rotation *= Quaternion.AngleAxis(_look.y * rotationPower, Vector3.right);
+
+        var angles = robotBody.transform.localEulerAngles;
+        angles.z = 0;
+
+        var angle = robotBody.transform.localEulerAngles.x;
+
+        //Clamp the Up/Down rotation
+        if (angle > 180 && angle < 340)
+        {
+            angles.x = 340;
+        }
+        else if (angle < 180 && angle > 40)
+        {
+            angles.x = 40;
+        }
     }
 
     void Jump()
