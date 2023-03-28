@@ -23,7 +23,9 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] public int currentAmmo;
     [SerializeField] public float reloadSpeed;
     [HideInInspector]
-    public bool reload = false;
+    bool reload = false;
+    [HideInInspector]
+    bool isShooting;
 
     public Animator gunAnimation;
 
@@ -41,7 +43,6 @@ public class PlayerShoot : MonoBehaviour
         if (currentAmmo <= 0)
         {
             StartCoroutine(Reload());
-            return;
         }
         StartCoroutine(Shoot());
     }
@@ -61,14 +62,16 @@ public class PlayerShoot : MonoBehaviour
     {
         if (Input.GetMouseButton(0) && Time.time >= nextTimeToFire)
         {
-            gunAnimation.SetBool("Shooting", true);
             currentAmmo--;
+            gunAnimation.SetBool("Shooting", true);
+
             nextTimeToFire = Time.time + 1f / fireRate;
             var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
             bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
+            yield return new WaitForSeconds(fireRate);
+
         }
-            gunAnimation.SetBool("Shooting", false);
-        yield return new WaitForSeconds(fireRate);
+        gunAnimation.SetBool("Shooting", false);
     }
 
 }
