@@ -147,7 +147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39353019}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -309,7 +309,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 297832076}
   m_LocalRotation: {x: -0, y: 0.04227294, z: -0, w: 0.9991061}
-  m_LocalPosition: {x: -0.21117592, y: 1.4999999, z: -2.491065}
+  m_LocalPosition: {x: -0.21117592, y: 1.5, z: -2.491065}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -401,6 +401,7 @@ MonoBehaviour:
   maxAcceleration: 25
   maxAirAcceleration: 1
   jumpHeight: 2
+  mouseSensitivity: 5.77
   maxAirJumps: 0
   maxGroundAngle: 25
   maxStairsAngle: 50
@@ -414,8 +415,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   playerCam: {fileID: 297832077}
   robotBody: {fileID: 39353020}
-  _mainCamera: {fileID: 297832076}
-  rotationPower: 0
+  followGameObj: {fileID: 233763563}
 --- !u!1 &1022990841
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,7 +528,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1022990841}
   m_LocalRotation: {x: 0, y: 0.04227294, z: 0, w: 0.9991061}
-  m_LocalPosition: {x: 11.258824, y: 2.8179998, z: -2.341065}
+  m_LocalPosition: {x: 11.258824, y: 2.5, z: -2.341065}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -943,6 +943,7 @@ MonoBehaviour:
   maxAcceleration: 25
   maxAirAcceleration: 1
   jumpHeight: 2
+  mouseSensitivity: 0
   maxAirJumps: 0
   maxGroundAngle: 25
   maxStairsAngle: 50
@@ -956,8 +957,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   playerCam: {fileID: 0}
   robotBody: {fileID: 0}
-  _mainCamera: {fileID: 0}
-  rotationPower: 0
+  followGameObj: {fileID: 0}
 --- !u!135 &2139143263
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1160,7 +1160,7 @@ Animator:
   m_GameObject: {fileID: 5255782969959041896}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0d80f5a6348b57547bf78189c4713a04, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -2786,7 +2786,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5255782969959041896}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.47, y: 1.318, z: 0.15}
+  m_LocalPosition: {x: 11.47, y: 1, z: 0.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2825,7 +2825,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 1.9
   m_Direction: 1
-  m_Center: {x: 0, y: -0.14, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &9155414933622595039
 Transform:
   m_ObjectHideFlags: 0
