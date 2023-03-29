@@ -25,7 +25,7 @@ public class PlayerShoot : MonoBehaviour
     [HideInInspector]
     bool reload = false;
     [HideInInspector]
-    bool isShooting;
+    bool isShooting = false;
 
     public Animator gunAnimation;
 
@@ -63,13 +63,14 @@ public class PlayerShoot : MonoBehaviour
         if (Input.GetMouseButton(0) && Time.time >= nextTimeToFire)
         {
             currentAmmo--;
+            isShooting = true;
             gunAnimation.SetBool("Shooting", true);
 
             nextTimeToFire = Time.time + 1f / fireRate;
             var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
             bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
             yield return new WaitForSeconds(fireRate);
-
+            isShooting = false;
         }
         gunAnimation.SetBool("Shooting", false);
     }
