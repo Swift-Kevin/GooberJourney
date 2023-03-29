@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -33,7 +34,11 @@ public class Movement : MonoBehaviour
     [SerializeField]
     Transform followGameObj;
 
-    bool desiredJump;
+    [Header("ADS/3rdPOV Cameras")]
+    [SerializeField] GameObject thirdPersonCamera;
+    [SerializeField] GameObject aimDownSightsCamera;
+
+    bool desiredJump, isAiming;
     int jumpPhase, groundContactCount, stepsSinceLastGrounded, stepsSinceLastJump, steepContactCount;
     bool OnGround => groundContactCount > 0;
     bool OnSteep => steepContactCount > 0;
@@ -73,6 +78,7 @@ public class Movement : MonoBehaviour
         AdjustVelocity();
         RotateCharacter();
         RotateCamera();
+        AimDownSights();
         if (desiredJump)
         {
             desiredJump = false;
@@ -97,7 +103,26 @@ public class Movement : MonoBehaviour
     {
         Vector3 playerDir = new Vector3(playerInput.x, 0f, playerInput.y);
         float ang = Vector3.SignedAngle(Vector3.forward, playerDir, Vector3.up);
-        robotBody.rotation = Quaternion.Lerp(robotBody.rotation, Quaternion.Euler(0, ang, 0), .5f);
+        robotBody.rotation = Quaternion.Lerp(robotBody.rotation, Quaternion.Euler(0, ang, 0), .3f);
+    }
+
+    void AimDownSights()
+    {
+        if (playerMovement.Player.ADSBool.WasPressedThisFrame())
+        {
+            // boolean for Steven to use for animations, if he can use it
+            isAiming = true;
+            thirdPersonCamera.SetActive(false);
+            aimDownSightsCamera.SetActive(true);
+
+        }
+        else if (playerMovement.Player.ADSBool.WasReleasedThisFrame())
+        {
+            isAiming = false;
+            thirdPersonCamera.SetActive(true);
+            aimDownSightsCamera.SetActive(false);
+
+        }
     }
 
     void Jump()
