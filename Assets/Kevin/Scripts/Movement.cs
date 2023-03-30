@@ -65,7 +65,7 @@ public class Movement : MonoBehaviour
         playerMovement = new PlayerMovement();
         playerMovement.Player.Enable();
     }
-
+    
     // Update is called once per frame
     void Update()
     {
