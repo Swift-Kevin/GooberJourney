@@ -8,15 +8,14 @@ public class Movement : MonoBehaviour
 {
     [SerializeField]
     Transform playerInputSpace = default;
-
     PlayerMovement playerMovement;
     Vector3 velocity, desiredVelocity, contactNormal, steepNormal, upAxis, rightAxis, forwardAxis;
     Rigidbody body;
     Vector2 playerInput, mainCamLook;
 
-    [SerializeField, Range(0f, 100f)]
+    [SerializeField, Range(0f, 250f)]
     float maxSpeed = 10f;
-    [SerializeField, Range(0f, 100f)]
+    [SerializeField, Range(0f, 250f)]
     float maxAcceleration = 10f, maxAirAcceleration = 1f;
     [SerializeField, Range(0f, 10f)]
     float jumpHeight = 2f, mouseSensitivity;
@@ -36,6 +35,8 @@ public class Movement : MonoBehaviour
     Transform robotBody;
     [SerializeField]
     Transform followGameObj;
+    [SerializeField]
+    GameObject scope3, scope4, scope8;
 
     [Header("ADS/3rdPOV Cameras")]
     [SerializeField] GameObject thirdPersonCamera;
@@ -86,7 +87,8 @@ public class Movement : MonoBehaviour
         desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
         desiredJump |= playerMovement.Player.Jump.WasPressedThisFrame();
 
-        
+        AimDownSights();
+
 
     }
 
@@ -97,7 +99,6 @@ public class Movement : MonoBehaviour
         AdjustVelocity();
         RotateCharacter();
         RotateCamera();
-        AimDownSights();
         if (desiredJump)
         {
             desiredJump = false;
@@ -134,6 +135,9 @@ public class Movement : MonoBehaviour
             isAiming = true;
             thirdPersonCamera.SetActive(false);
             aimDownSightsCamera.SetActive(true);
+            scope3.SetActive(false);
+            scope4.SetActive(false);
+            scope8.SetActive(false);
 
         }
         else if (playerMovement.Player.ADSBool.WasReleasedThisFrame())
@@ -141,7 +145,9 @@ public class Movement : MonoBehaviour
             isAiming = false;
             thirdPersonCamera.SetActive(true);
             aimDownSightsCamera.SetActive(false);
-
+            scope3.SetActive(true);
+            scope4.SetActive(true);
+            scope8.SetActive(true);
         }
     }
 
