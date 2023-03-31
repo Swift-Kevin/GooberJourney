@@ -30,11 +30,7 @@ public class Movement : MonoBehaviour
     [SerializeField]
     LayerMask probeMask = -1, stairsMask = -1;
     [SerializeField]
-    Transform playerCam;
-    [SerializeField]
-    Transform robotBody;
-    [SerializeField]
-    Transform followGameObj;
+    Transform playerCam, rotateBody, followGameObj;
     [SerializeField]
     GameObject scope3, scope4, scope8;
 
@@ -106,6 +102,7 @@ public class Movement : MonoBehaviour
         }
         velocity += gravity * Time.deltaTime;
         body.velocity = velocity;
+
         ClearState();
     }
     void ClearState()
@@ -124,7 +121,7 @@ public class Movement : MonoBehaviour
     {
         Vector3 playerDir = new Vector3(playerInput.x, 0f, playerInput.y);
         float ang = Vector3.SignedAngle(Vector3.forward, playerDir, Vector3.up);
-        robotBody.rotation = Quaternion.Lerp(robotBody.rotation, Quaternion.Euler(0, ang, 0), .3f);
+        rotateBody.rotation = Quaternion.Lerp(rotateBody.rotation, Quaternion.Euler(0, ang, 0), .3f);
     }
 
     void AimDownSights()
