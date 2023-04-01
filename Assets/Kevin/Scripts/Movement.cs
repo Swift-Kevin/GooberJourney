@@ -11,14 +11,14 @@ public class Movement : MonoBehaviour
     PlayerMovement playerMovement;
     Vector3 velocity, desiredVelocity, contactNormal, steepNormal, upAxis, rightAxis, forwardAxis;
     Rigidbody body;
-    Vector2 playerInput, mainCamLook;
+    Vector2 playerInput;
 
     [SerializeField, Range(0f, 250f)]
     float maxSpeed = 10f;
     [SerializeField, Range(0f, 250f)]
     float maxAcceleration = 10f, maxAirAcceleration = 1f;
     [SerializeField, Range(0f, 10f)]
-    float jumpHeight = 2f, mouseSensitivity;
+    float jumpHeight = 2f;
     [SerializeField, Range(0, 5)]
     int maxAirJumps = 0;
     [SerializeField, Range(0f, 90f)]
@@ -29,16 +29,8 @@ public class Movement : MonoBehaviour
     float probeDistance = 1f;
     [SerializeField]
     LayerMask probeMask = -1, stairsMask = -1;
-    [SerializeField]
-    Transform playerCam, rotateBody, followGameObj;
-    [SerializeField]
-    GameObject scope3, scope4, scope8;
 
-    [Header("ADS/3rdPOV Cameras")]
-    [SerializeField] GameObject thirdPersonCamera;
-    [SerializeField] GameObject aimDownSightsCamera;
-
-    bool desiredJump, isAiming;
+    bool desiredJump;
     int jumpPhase, groundContactCount, stepsSinceLastGrounded, stepsSinceLastJump, steepContactCount;
     bool OnGround => groundContactCount > 0;
     bool OnSteep => steepContactCount > 0;
@@ -83,9 +75,6 @@ public class Movement : MonoBehaviour
         desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
         desiredJump |= playerMovement.Player.Jump.WasPressedThisFrame();
 
-        AimDownSights();
-
-
     }
 
     private void FixedUpdate()
@@ -93,8 +82,6 @@ public class Movement : MonoBehaviour
         Vector3 gravity = CustomGravity.GetGravity(body.position, out upAxis);
         UpdateState();
         AdjustVelocity();
-        RotateCharacter();
-        RotateCamera();
         if (desiredJump)
         {
             desiredJump = false;
@@ -109,43 +96,6 @@ public class Movement : MonoBehaviour
     {
         groundContactCount = steepContactCount = 0;
         contactNormal = steepNormal = Vector3.zero;
-    }
-
-    void RotateCamera()
-    {
-        mainCamLook = playerMovement.Player.Cam.ReadValue<Vector2>();
-        followGameObj.transform.Rotate(0f, mainCamLook.x * Time.deltaTime * mouseSensitivity, 0f);
-    }
-
-    void RotateCharacter()
-    {
-        Vector3 playerDir = new Vector3(playerInput.x, 0f, playerInput.y);
-        float ang = Vector3.SignedAngle(Vector3.forward, playerDir, Vector3.up);
-        rotateBody.rotation = Quaternion.Lerp(rotateBody.rotation, Quaternion.Euler(0, ang, 0), .3f);
-    }
-
-    void AimDownSights()
-    {
-        if (playerMovement.Player.ADSBool.WasPressedThisFrame())
-        {
-            // boolean for Steven to use for animations, if he can use it
-            isAiming = true;
-            thirdPersonCamera.SetActive(false);
-            aimDownSightsCamera.SetActive(true);
-            scope3.SetActive(false);
-            scope4.SetActive(false);
-            scope8.SetActive(false);
-
-        }
-        else if (playerMovement.Player.ADSBool.WasReleasedThisFrame())
-        {
-            isAiming = false;
-            thirdPersonCamera.SetActive(true);
-            aimDownSightsCamera.SetActive(false);
-            scope3.SetActive(true);
-            scope4.SetActive(true);
-            scope8.SetActive(true);
-        }
     }
 
     void Jump(Vector3 gravity)

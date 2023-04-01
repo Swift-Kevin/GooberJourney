@@ -1,59 +1,40 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CustomGravGPT : MonoBehaviour
 {
-    public float gravity = -9.81f; // The strength of the gravity, negative value pulls objects down
-    public float range = 10f; // The range at which objects will be affected by this gravity
-    public bool pullPlayer = true; // Whether or not this gravity should affect the player
-
-    private Collider[] colliders; // The colliders within range
-    private Rigidbody playerRigidbody; // The player's rigidbody, if applicable
+    public float speed = 10f; // the speed of the bullet
+    public float gravity = 9.8f; // the gravitational force applied to the bullet
+    public LayerMask arcLayerMask; // the layer(s) that will trigger the arcing effect
+    private Vector3 startPosition; // the position where the bullet was spawned
+    private bool arcing = false; // flag indicating whether the bullet is currently arcing or not
 
     private void Start()
     {
-        // Get the colliders within range
-        colliders = Physics.OverlapSphere(transform.position, range);
+        startPosition = transform.position; // save the initial position of the bullet
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        foreach (Collider collider in colliders)
+        if (!arcing)
         {
-            // If the collider has a rigidbody and is not this object, apply gravity
-            if (collider.attachedRigidbody != null && collider.attachedRigidbody != GetComponent<Rigidbody>())
-            {
-                Vector3 gravityDirection = (transform.position - collider.transform.position).normalized;
-                float distance = Vector3.Distance(transform.position, collider.transform.position);
-                float gravityStrength = gravity / Mathf.Pow(distance, 2f);
-                Vector3 gravityForce = gravityDirection * gravityStrength;
-
-                collider.attachedRigidbody.AddForce(gravityForce, ForceMode.Acceleration);
-            }
-
-            // If this gravity should affect the player and the collider is the player, store the player's rigidbody
-            if (pullPlayer && collider.CompareTag("Player"))
-            {
-                playerRigidbody = collider.attachedRigidbody;
-            }
+            // if the bullet is not arcing, move it straight ahead
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
         }
-
-        // If this gravity should affect the player and the player's rigidbody has been stored, apply gravity to the player
-        if (pullPlayer && playerRigidbody != null)
+        else
         {
-            Vector3 gravityDirection = (transform.position - playerRigidbody.transform.position).normalized;
-            float distance = Vector3.Distance(transform.position, playerRigidbody.transform.position);
-            float gravityStrength = gravity / Mathf.Pow(distance, 2f);
-            Vector3 gravityForce = gravityDirection * gravityStrength;
-
-            playerRigidbody.AddForce(gravityForce, ForceMode.Acceleration);
+            // if the bullet is arcing, apply the gravitational force
+            Vector3 direction = (transform.position - startPosition).normalized;
+            transform.Translate(direction * speed * Time.deltaTime);
+            transform.Translate(Vector3.down * gravity * Time.deltaTime);
         }
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnTriggerEnter(Collider other)
     {
-        // Draw a sphere to show the range of the gravity object
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, range);
+        // if the bullet collides with an object on the arc layer mask, start arcing
+        if (arcLayerMask == (arcLayerMask | (1 << other.gameObject.layer)))
+        {
+            arcing = true;
+        }
     }
 }

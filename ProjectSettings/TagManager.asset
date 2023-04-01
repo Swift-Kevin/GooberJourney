@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Enemy
+  - GravityZone
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - PlanetaryObjects
   - 
   - whatIsGround
-  - 
+  - Arc
   - 
   - 
   - 

@@ -8,11 +8,11 @@ public class PlayerCam : MonoBehaviour
     PlayerMovement inputCtrls;
 
     public Transform mesh;
+    public Transform orientation;
 
     public float sensX;
     public float sensY;
 
-    public Transform orientation;
 
     float xRotation;
     float yRotation;
