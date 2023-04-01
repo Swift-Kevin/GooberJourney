@@ -37,5 +37,6 @@ public class PlayerCam : MonoBehaviour
         mesh.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+        Physics.SyncTransforms();
     }
 }

@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class MovementScript : MonoBehaviour
+public class CombinedMovementScripts : MonoBehaviour
 {
     PlayerMovement inputCtrls;
 
@@ -11,33 +10,22 @@ public class MovementScript : MonoBehaviour
     public float moveSpeed;
 
     public float groundDrag;
-
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
     bool readyToJump;
-
+    
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
     bool grounded;
 
     public Transform orientation;
-
     float horizontalInput;
     float verticalInput;
-
     Vector3 moveDirection;
-
+    Vector3 upAxis;
     Rigidbody rb;
-
-    public MovementState state;
-    public enum MovementState
-    {
-        walking,
-        sprinting,
-        air
-    }
 
     private void Start()
     {
@@ -56,7 +44,8 @@ public class MovementScript : MonoBehaviour
 
         InputMovement();
         SpeedControl();
-
+        
+        
         if (grounded)
             rb.drag = groundDrag;
         else
@@ -83,7 +72,6 @@ public class MovementScript : MonoBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
 
         }
-
     }
 
 
@@ -107,7 +95,7 @@ public class MovementScript : MonoBehaviour
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
     }
-
+     
     void SpeedControl()
     {
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -118,7 +106,6 @@ public class MovementScript : MonoBehaviour
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
     }
-
     void Jump()
     {
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
