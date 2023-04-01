@@ -6,7 +6,7 @@ public class ADS : MonoBehaviour
 {
     PlayerMovement playerMovement;
     public bool isAiming;
-    [SerializeField] GameObject thirdPersonCamera;
+    [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject aimDownSightsCamera;
 
     // Start is called before the first frame update
@@ -28,13 +28,13 @@ public class ADS : MonoBehaviour
         {
             // boolean for Steven to use for animations, if he can use it
             isAiming = true;
-            thirdPersonCamera.SetActive(false);
+            firstPersonCamera.SetActive(false);
             aimDownSightsCamera.SetActive(true);
         }
         else if (playerMovement.Player.ADSBool.WasReleasedThisFrame())
         {
             isAiming = false;
-            thirdPersonCamera.SetActive(true);
+            firstPersonCamera.SetActive(true);
             aimDownSightsCamera.SetActive(false);
         }
     }
