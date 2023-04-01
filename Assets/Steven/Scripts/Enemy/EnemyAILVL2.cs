@@ -6,6 +6,8 @@ public class EnemyAILVL2 : MonoBehaviour
 {
     Transform _Player;
     float distance;
+    public float maxHealth;
+    public float currentHealth;
     public float bulletSpeed;
     public float howClosetoPlayer;
     public float fireRate;
@@ -17,6 +19,7 @@ public class EnemyAILVL2 : MonoBehaviour
 
     private void Start()
     {
+        currentHealth = maxHealth;
         _Player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
@@ -43,5 +46,15 @@ public class EnemyAILVL2 : MonoBehaviour
         Destroy(_shoot, 2);
         Destroy(_shoot2, 2);
 
+    }
+
+    public void TakeDamage(float Amount)
+    {
+        currentHealth -= Amount;
+
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }

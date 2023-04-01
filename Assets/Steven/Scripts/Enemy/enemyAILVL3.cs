@@ -5,6 +5,8 @@ using UnityEngine;
 public class enemyAILVL3 : MonoBehaviour
 {
     Transform _Player;
+    public float currentHealth;
+    public float maxHealth;
     float distance;
     public float bulletSpeed;
     public float howClosetoPlayer;
@@ -19,6 +21,7 @@ public class enemyAILVL3 : MonoBehaviour
 
     private void Start()
     {
+        currentHealth = maxHealth;
         _Player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
@@ -51,6 +54,16 @@ public class enemyAILVL3 : MonoBehaviour
         Destroy(_shoot3, 2);
         Destroy(_shoot4, 2);
 
+    }
+
+    public void TakeDamage(float amount)
+    {
+        currentHealth -= amount;
+
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
 }

@@ -8,6 +8,8 @@ public class EnemyAI : MonoBehaviour
     Transform _Player;
     float distance;
     public float bulletSpeed;
+    public float currentHealth;
+    public float maxHealth;
     public float howClosetoPlayer;
     public float fireRate;
     public float nextFire;
@@ -17,6 +19,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
+        currentHealth = maxHealth;
         _Player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
@@ -42,4 +45,13 @@ public class EnemyAI : MonoBehaviour
 
     }
 
+    public void TakeDamage(float damageAmount)
+    {
+        currentHealth -= damageAmount;
+
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
 }
