@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerCam : MonoBehaviour
 {
     PlayerMovement inputCtrls;
+    public PauseMenu pauseMenu;
 
     public Transform mesh;
     public Transform orientation;
@@ -13,6 +14,7 @@ public class PlayerCam : MonoBehaviour
     public float sensX;
     public float sensY;
 
+    private bool isPaused;
 
     float xRotation;
     float yRotation;
@@ -27,16 +29,20 @@ public class PlayerCam : MonoBehaviour
     }
     private void Update()
     {
-        float mouseX = inputCtrls.Player.Cam.ReadValue<Vector2>().x * sensX;
-        float mouseY = inputCtrls.Player.Cam.ReadValue<Vector2>().y * sensY;
+        isPaused = pauseMenu.isPaused;
+        if (!isPaused)
+        {
+            float mouseX = inputCtrls.Player.Cam.ReadValue<Vector2>().x * sensX;
+            float mouseY = inputCtrls.Player.Cam.ReadValue<Vector2>().y * sensY;
 
-        yRotation += mouseX;
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            yRotation += mouseX;
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        mesh.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-        orientation.rotation = Quaternion.Euler(0, yRotation, 0);
-        Physics.SyncTransforms();
+            mesh.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+            transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+            orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+            Physics.SyncTransforms();
+        }
     }
 }

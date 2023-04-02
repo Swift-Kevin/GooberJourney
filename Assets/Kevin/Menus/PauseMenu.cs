@@ -5,17 +5,27 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+    PlayerMovement inputCtrls;
+
     // Define the different items used in the script
     [Header("Elements Used")]
     public GameObject ui;
     public string menuSceneName = "MainMenu";
     public SceneFader sceneFader;
 
+    public bool isPaused;
+
+    private void Start()
+    {
+        inputCtrls = new PlayerMovement();
+        inputCtrls.Player.Enable();
+    }
+
     // Update called every frame and will see if the P or Esc keys are pressed
     // If they are then the pause menu will be displayed
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
+        if (inputCtrls.Player.PauseMenu.WasPressedThisFrame())
         {
             Toggle();
         }
@@ -30,11 +40,15 @@ public class PauseMenu : MonoBehaviour
         {
             // Game will run at no speed
             Time.timeScale = 0f;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            isPaused = true;
         }
         else
         {
             // Game will run at normal speed
             Time.timeScale = 1f;
+            isPaused = false;
         }
     }
 
