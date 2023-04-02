@@ -3,7 +3,6 @@ using UnityEngine;
 public class BulletArc : MonoBehaviour
 {
     public float speed = 10f;
-    public float angle = 45f;
     public LayerMask arcLayerMask;
 
     private Vector3 target;

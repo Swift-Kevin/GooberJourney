@@ -4,81 +4,57 @@ using UnityEngine;
 
 public class ObjectSpawner : MonoBehaviour
 {
-    [SerializeField] private Vector3 spawnAreaMin = Vector3.zero;
-    [SerializeField] private Vector3 spawnAreaMax = Vector3.one;
-    
-    public GameObject objectPrefab;
-    public int initialNumberOfObjects = 10;
-    public float spawnInterval = 5f;
-    public float objectLifetime = 15f;
-    public Vector3 spawnArea;
-    public LayerMask layerMask;
+    public GameObject[] prefabs;
+    public int maxObjects = 10;
+    public float timeBetweenSpawn = 5.0f;
+    public float timeBetweenDeletion = 15.0f;
+    public Vector3 spawnLimitsMin;
+    public Vector3 spawnLimitsMax;
+    public string layerMaskName = "Grapplable";
 
     private List<GameObject> spawnedObjects = new List<GameObject>();
 
     private void Start()
     {
-        for (int i = 0; i < initialNumberOfObjects; i++)
+        for (int i = 0; i < maxObjects; i++)
         {
             SpawnObject();
         }
-
-        StartCoroutine(SpawnObjectCoroutine());
-        StartCoroutine(DeleteOldestObjectCoroutine());
+        InvokeRepeating("SpawnObject", timeBetweenSpawn, timeBetweenSpawn);
     }
 
     private void SpawnObject()
     {
-        Vector3 spawnPosition = transform.position + new Vector3(Random.Range(spawnAreaMin.x, spawnAreaMax.x), Random.Range(spawnAreaMin.y, spawnAreaMax.y), Random.Range(spawnAreaMin.z, spawnAreaMax.z));
-        RaycastHit hit;
-
-        if (Physics.Raycast(spawnPosition + Vector3.up * 100f, Vector3.down, out hit, Mathf.Infinity, layerMask))
-        {
-            float height = hit.point.y;
-            if (height < 0)
-            {
-                height = 0;
-            }
-
-            spawnPosition.y = height + objectPrefab.transform.localScale.y / 2f;
-        }
-
-        GameObject newObject = Instantiate(objectPrefab, spawnPosition, Quaternion.identity);
-        newObject.layer = LayerMask.NameToLayer("Grapplable");
-
+        Vector3 spawnPosition = new Vector3(Random.Range(spawnLimitsMin.x, spawnLimitsMax.x),
+                                            Random.Range(spawnLimitsMin.y, spawnLimitsMax.y),
+                                            Random.Range(spawnLimitsMin.z, spawnLimitsMax.z));
+        GameObject newObject = Instantiate(prefabs[Random.Range(0, prefabs.Length)], spawnPosition, Quaternion.identity);
+        newObject.layer = LayerMask.NameToLayer(layerMaskName);
         spawnedObjects.Add(newObject);
-    }
 
-    private IEnumerator SpawnObjectCoroutine()
-    {
-        while (true)
+        if (spawnedObjects.Count > maxObjects)
         {
-            yield return new WaitForSeconds(spawnInterval);
-            SpawnObject();
+            GameObject oldestObject = spawnedObjects[0];
+            spawnedObjects.RemoveAt(0);
+            if (oldestObject.activeInHierarchy)
+            {
+                StartCoroutine(DestroyAfterDelay(oldestObject, timeBetweenDeletion));
+            }
         }
     }
 
-    private IEnumerator DeleteOldestObjectCoroutine()
+    private IEnumerator DestroyAfterDelay(GameObject objectToDestroy, float delay)
     {
-        while (true)
+        yield return new WaitForSeconds(delay);
+        if (objectToDestroy != null)
         {
-            yield return new WaitForSeconds(objectLifetime);
-
-            if (spawnedObjects.Count > 0)
-            {
-                GameObject oldestObject = spawnedObjects[0];
-                spawnedObjects.Remove(oldestObject);
-                Destroy(oldestObject);
-            }
+            Destroy(objectToDestroy);
         }
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
-        Vector3 spawnBoxCenter = transform.position + new Vector3((spawnAreaMin.x + spawnAreaMax.x) / 2f, (spawnAreaMin.y + spawnAreaMax.y) / 2f, (spawnAreaMin.z + spawnAreaMax.z) / 2f);
-        Vector3 spawnBoxSize = new Vector3(Mathf.Abs(spawnAreaMax.x - spawnAreaMin.x), Mathf.Abs(spawnAreaMax.y - spawnAreaMin.y), Mathf.Abs(spawnAreaMax.z - spawnAreaMin.z));
-        Gizmos.DrawWireCube(spawnBoxCenter, spawnBoxSize);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube((spawnLimitsMax + spawnLimitsMin) * 0.5f, spawnLimitsMax - spawnLimitsMin);
     }
-
 }
