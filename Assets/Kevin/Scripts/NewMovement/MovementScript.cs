@@ -9,7 +9,7 @@ public class MovementScript : MonoBehaviour
 
     [Header("Movement")]
     public float moveSpeed;
-
+    public bool activeGrapple;
     public float groundDrag;
 
     public float jumpForce;
@@ -89,6 +89,10 @@ public class MovementScript : MonoBehaviour
 
     void MovePlayer()
     {
+        if (activeGrapple)
+        {
+            return;
+        }
         if (inputCtrls.Player.Sprint.WasPressedThisFrame())
         {
             moveSpeed = 10f;
@@ -110,6 +114,11 @@ public class MovementScript : MonoBehaviour
 
     void SpeedControl()
     {
+        if (activeGrapple)
+        {
+            return;
+        }
+
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         if (flatVel.magnitude > moveSpeed)
@@ -128,5 +137,50 @@ public class MovementScript : MonoBehaviour
     void ResetJump()
     {
         readyToJump = true;
+    }
+
+    public Vector3 CalculateJumpVelocity(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight)
+    {
+        float gravity = Physics.gravity.y;
+        float displacementY = endPoint.y - startPoint.y;
+        Vector3 displacementXZ = new Vector3(endPoint.x - startPoint.x, 0f, endPoint.z - startPoint.z);
+
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * trajectoryHeight);
+        Vector3 velocityXZ = displacementXZ / (Mathf.Sqrt(-2 * trajectoryHeight / gravity) + Mathf.Sqrt(2 * (displacementY - trajectoryHeight) / gravity)); 
+
+        return velocityXZ + velocityY;
+    }
+
+    private bool enableMovementOnNextTouch;
+
+    public void JumptoPosition(Vector3 TargetPosition, float trajectoryHeight)
+    {
+        activeGrapple = true;
+        velocityToSet = CalculateJumpVelocity(transform.position, TargetPosition, trajectoryHeight);
+        Invoke(nameof(SetVelocity), 0.1f);
+    }
+
+    public void ResetMovement()
+    {
+        activeGrapple = false;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (enableMovementOnNextTouch)
+        {
+            enableMovementOnNextTouch = false;
+            ResetMovement();
+
+            GetComponent<Grappler>().StopGrapple();
+        }
+    }
+
+    private Vector3 velocityToSet;
+
+    private void SetVelocity()
+    {
+        enableMovementOnNextTouch = true;
+        rb.velocity = velocityToSet;
     }
 }

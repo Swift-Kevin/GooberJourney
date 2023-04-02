@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 23000012718083582}
   - component: {fileID: 95000013006542780}
   - component: {fileID: 1625966332}
+  - component: {fileID: 37077105}
   m_Layer: 0
   m_Name: Canon_lvl_4_var_1
   m_TagString: Untagged
@@ -181,6 +182,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e69efb5ae546e20419c409dae6c80072, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 10
+  currentHealth: 10
   bulletSpeed: 1000
   howClosetoPlayer: 10
   fireRate: 20
@@ -189,6 +192,20 @@ MonoBehaviour:
   shootStartingPosition: {fileID: 1464562451}
   shootStartingPosition2: {fileID: 1728818513}
   projectile: {fileID: 1545394942931636341, guid: ff0c49b7467cb5b4b9f6f3d25ed5dfe7, type: 3}
+--- !u!136 &37077105
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010156534366}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.63
+  m_Height: 1.51
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.52, z: 0.09309788}
 --- !u!1 &1000011939376292
 GameObject:
   m_ObjectHideFlags: 0

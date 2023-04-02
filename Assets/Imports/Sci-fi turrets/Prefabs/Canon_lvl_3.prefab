@@ -247,8 +247,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.49207845
-  m_Height: 0.6337276
+  m_Radius: 0.76
+  m_Height: 1.63
   m_Direction: 1
   m_Center: {x: 0, y: 0.3065894, z: 0.09309788}
 --- !u!135 &1851663960
@@ -276,6 +276,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a378865ed088a048be60967d18a3ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentHealth: 1000
+  maxHealth: 10
   bulletSpeed: 1000
   howClosetoPlayer: 10
   fireRate: 0.5

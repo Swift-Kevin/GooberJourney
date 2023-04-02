@@ -13,8 +13,9 @@ GameObject:
   - component: {fileID: 745566699592609071}
   - component: {fileID: 1103821499928595166}
   - component: {fileID: -7178660177788405546}
+  - component: {fileID: -2126597441335341691}
   m_Layer: 0
-  m_Name: LVL 4
+  m_Name: LVL_4 XXBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -115,3 +116,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-2126597441335341691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6987389497558700545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24951e11e67361a40a9611167c350737, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
